@@ -7,6 +7,7 @@ First of all you need to installing the pre requisites modules and frameworks of
 - [Django Framework](https://www.djangoproject.com/download/)
 - [Django Rest Framework (DRF)](https://www.django-rest-framework.org/#installation)
 - [drf-yasg](https://drf-yasg.readthedocs.io/en/stable/readme.html)
+- [python-dotenv](https://pypi.org/project/python-dotenv/)
 
 ### Installing
 To install it´s simple, first create a venv ambient
@@ -22,6 +23,9 @@ pip install -U drf-yasg
 ```
 ```
 pip install djangorestframework
+```
+```
+pip install python-dotenv
 ```
 And that´s it, now your project have all the packages that needs
 
@@ -49,6 +53,7 @@ python manage.py runserver
 use the command on the root of project
 
 ## Built With
+- [Python 3.11.9](https://www.python.org/downloads/)
 - [Django Framework](https://www.djangoproject.com/download/)
 - [Django Rest Framework (DRF)](https://www.django-rest-framework.org/#installation)
 - [PostgreSQL](https://www.postgresql.org/download/)
