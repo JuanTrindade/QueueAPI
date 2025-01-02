@@ -27,6 +27,11 @@ pip install djangorestframework
 ```
 pip install python-dotenv
 ```
+And for the last installation package, if the django project warns you that you need ``psycopg2`` module just run
+```
+pip install psycopg2-binary
+```
+
 And that´s it, now your project have all the packages that needs
 
 ## Setup Database
