@@ -9,20 +9,20 @@ from. import serializers
 # 
 
 class UserList(APIView):
-    @swagger_auto_schema(responses={200: serializers.UserSerializer(many=True)})
+    @swagger_auto_schema(responses={200: serializers.UserListSerializer(many=True)})
     def get(self, request):
         users = models.User.objects.all()
-        user_serializer = serializers.UserSerializer(users, many=True)
+        user_serializer = serializers.UserListSerializer(users, many=True)
 
         return Response(
             user_serializer.data, 
             status=status.HTTP_200_OK
         )
 
-    @swagger_auto_schema(request_body=serializers.UserSerializer)
+    @swagger_auto_schema(request_body=serializers.UserCreateSerializer)
     def post(self, request):
         try:
-            user_serializer = serializers.UserSerializer(data=request.data)
+            user_serializer = serializers.UserCreateSerializer(data=request.data)
             if user_serializer.is_valid():
                 user_serializer.save()
                 
@@ -40,11 +40,11 @@ class UserList(APIView):
 
 
 class UserRead(APIView):
-    @swagger_auto_schema(responses={200: serializers.UserSerializer()})
+    @swagger_auto_schema(responses={200: serializers.UserListSerializer()})
     def get(self, request, pk):
         try:
             user = models.User.objects.get(pk=pk)
-            user_serializer = serializers.UserSerializer(user)
+            user_serializer = serializers.UserListSerializer(user)
 
             return Response(
                 user_serializer.data,

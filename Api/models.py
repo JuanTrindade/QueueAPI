@@ -1,11 +1,35 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-class User(models.Model):
-    name = models.CharField(
-        max_length=255, 
-        verbose_name='Nome de Usuário', 
-        null=False, 
-        blank=False
+class User(AbstractUser):
+    # name = models.CharField(
+    #     max_length=255, 
+    #     verbose_name='Nome de Usuário', 
+    #     null=False, 
+    #     blank=False
+    # )
+
+    username = models.CharField(
+        verbose_name='Nome de Usuário',
+        max_length=150,
+        unique=True,
+        blank=False,
+        null=False,
+        default=False
+    )
+
+    password = models.CharField(
+        verbose_name='Senha',
+        max_length=255,
+        blank=False,
+        null=False,
+        default=False
+    )
+
+    email = models.EmailField(
+        verbose_name='Endereço de E-mail',
+        blank=False,
+        default=False
     )
 
 
