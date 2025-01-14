@@ -1,7 +1,11 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import IsAuthenticated
+from .task import put_on_queue
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 # Models
 from . import models
 # Serializers
@@ -104,13 +108,20 @@ class QueueRead(APIView):
 
 
 class ServicesList(APIView):
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = [IsAuthenticated]
+
     @swagger_auto_schema(responses={200: serializers.ServicesSerializer(many=True)})
     def get(self, request):
         services = models.Services.objects.all()
         service_serializer = serializers.ServicesSerializer(services, many=True)
 
         return Response(
-            service_serializer.data,
+            {
+                'data': service_serializer.data,
+                # 'user': request.user,
+                # 'auth': request.auth
+            },
             status=status.HTTP_200_OK
         )
 
@@ -132,3 +143,45 @@ class ServicesList(APIView):
             return Response({
                 'error': str(err)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ServicesSolicitations(APIView):
+    # def get(self, request, task_id):
+    #     try:
+    #         result_task = AsyncResult(task_id, app=app)
+            
+    #         return Response({
+    #             'status': result_task.status,
+    #             'task_id': result_task.id,
+    #             'result': result_task.result
+    #         }, status=status.HTTP_200_OK)
+        
+    #     except Exception as err:
+    #         return Response({
+    #             'error': str(err)
+    #         }, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, pk):
+        try:
+            user = get_object_or_404(models.User, pk=pk)
+
+            if not user.is_active:
+                            
+                return Response({
+                    'Ops!': 'The user is not active in the system'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+
+            context = put_on_queue.delay(
+                request.data['service_id'], 
+                pk
+            )
+            
+            return Response({
+                'status': context.status,
+                'task_id': context.id,
+            }, status=status.HTTP_201_CREATED)    
+            
+        except TimeoutError as err:
+            return Response({
+                'timeout': str(err)
+            }, status=status.HTTP_408_REQUEST_TIMEOUT)

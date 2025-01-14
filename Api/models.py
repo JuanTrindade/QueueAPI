@@ -55,7 +55,9 @@ class Services(models.Model):
 class Queue(models.Model):
     STATUS_TYPES = {
         'CPT': 'Completed',
-        'IPG': 'In Progress'
+        'IPG': 'In Progress',
+        'NTS': 'Not Started',
+        'FLD': 'Failed'
     }
 
     status = models.CharField(
